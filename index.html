@@ -12,6 +12,11 @@
     
     <script src="js/game.js"></script>
     <!--<script src="mainD.js"></script>-->
+    
+    <!--<script src='core.js'></script>-->
+    <!-- Para manejo del tooltip se usa esta libreria -->
+    <script src="js/Phasetips.js"></script>
+
 
   </head>
 
@@ -20,7 +25,7 @@
     
     <script type="text/javascript">
         /*Fondos*/
-        var escenario = new Phaser.Game(800,600,Phaser.CANVAS,'navigator',{preload: preload, create: create, update: update});
+        var game = new Phaser.Game(800,600,Phaser.CANVAS,'navigator',{preload: preload, create: create, update: update});
         
         /*Objetos*/
         var spoon ;
@@ -28,21 +33,41 @@
         /*Controles*/
         var espacio;
         var cursores;
-        
+        var tween = null;
+        var sprite;
+        var text;
         function preload(){
             /*Cosas a cargar antes de iniciar el juego [imagenes]*/ 
-            escenario.load.image('fondo1','sprites/textura.jpg');
-            escenario.load.image('cuchara','sprites/cuchara.png');
+            game.load.image('fondo1','sprites/textura.jpg');
+            game.load.image('cuchara','sprites/cuchara.png');
+            game.load.image('infoSpoon','sprites/InfoSpoon.png');
             /*Establecer un input por ejemplo de teclado*/
-            espacio = escenario.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+            espacio = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
             /*Establecer todos los inputs de teclado*/
-            cursores = escenario.input.keyboard.createCursorKeys();
+            cursores = game.input.keyboard.createCursorKeys();
+            
+            
+            
         }
         function create(){
+            
+            /*TEXTO CENTRADO en imagen*/
+            sprite = game.add.sprite(200, 200, 'infoSpoon');
+    sprite.inputEnabled = true;
+    sprite.input.enableDrag();
+
+    var style = { font: "32px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: sprite.width, align: "center", backgroundColor: "#ffff00" };
+
+    text = game.add.text(0, 0, "- text on a sprite -\ndrag me", style);
+    text.anchor.set(0.5);
+            /*||||||||||||||||||*/
+            
+            
+            
             /*Se inician los recursos sobre el juego[]*/            
-            escenario.add.sprite('0','0','fondo1');
+            game.add.sprite('0','0','fondo1');
             /*Agregamos la imagen y la dejamos en una variable*/
-            spoon =  escenario.add.sprite('0','0','cuchara');
+            spoon =  game.add.sprite('0','0','cuchara');
             /*cambiamos el punto de adhesion de la imagen */
             spoon.anchor.setTo(0.5,0.2);
             /*Escalado de la imagen */
@@ -50,15 +75,53 @@
             /*rotacion imagenes*/
             spoon.angle = 90;
             
+            var myTooltip = new Phasetips(game, {
+                                targetObject: spoon,
+                                context: "Hello tooltip",
+                                strokeColor: 0xff0000
+                              });
             
+            button = game.add.button(game.world.centerX - 95, 460, spoon, openWindow, this, 2, 1, 0);
+            button.input.useHandCursor = true;
 
             
+            
+            
+    //  You can drag the pop-up window around
+    popup = game.add.sprite(game.world.centerX, game.world.centerY, 'infoSpoon');
+    popup.alpha = 0.8;
+    popup.anchor.set(0.5);
+    popup.inputEnabled = true;
+    popup.input.enableDrag();
+
+    //  Position the close button to the top-right of the popup sprite (minus 8px for spacing)
+    var pw = (popup.width / 2) - 30;
+    var ph = (popup.height / 2) - 8;
+
+    //  And click the close button to close it down again
+    var closeButton = game.make.sprite(pw, -ph, 'close');
+    closeButton.inputEnabled = true;
+    closeButton.input.priorityID = 1;
+    closeButton.input.useHandCursor = true;
+    closeButton.events.onInputDown.add(closeWindow, this);
+
+    //  Add the "close button" to the popup window image
+    popup.addChild(closeButton);
+
+    //  Hide it awaiting a click
+    popup.scale.set(0.1);
+            
             /*Mantener dentro del canvas las imagenes*/
-            escenario.physics.startSystem(Phaser.Physics.ARCADE);
-            escenario.physics.arcade.enable(spoon);
+            game.physics.startSystem(Phaser.Physics.ARCADE);
+            game.physics.arcade.enable(spoon);
             spoon.body.collideWorldBounds = true; 
         }
         function update(){
+            /*Mantener el texto centrado dentro de un sprite */
+            text.x = Math.floor(sprite.x + sprite.width / 2);
+            text.y = Math.floor(sprite.y + sprite.height / 2);
+            
+            /*|||||||||||||||||||||||||||||||||||||||||||||*/
             /*Mantiene en constante actualizacion es un proceso vigilante que se encuentra en otro hilo[]*/
             if(espacio.isDown){
                 /*Rotacion con estacio presionado*/
@@ -81,6 +144,29 @@
                 /*Cambio de posicion validando una tecla presionada*/
                 spoon.position.y += 10;
             }
+        }
+        function openWindow() {
+
+            if ((tween !== null && tween.isRunning) || popup.scale.x === 1)
+            {
+                return;
+            }
+
+            //  Create a tween that will pop-open the window, but only if it's not already tweening or open
+            tween = game.add.tween(popup.scale).to( { x: 1, y: 1 }, 1000, Phaser.Easing.Elastic.Out, true);
+
+        }
+
+        function closeWindow() {
+
+        if (tween && tween.isRunning || popup.scale.x === 0.1)
+        {
+            return;
+        }
+
+        //  Create a tween that will close the window, but only if it's not already tweening or closed
+        tween = game.add.tween(popup.scale).to( { x: 0.1, y: 0.1 }, 500, Phaser.Easing.Elastic.In, true);
+
         }
         
         
