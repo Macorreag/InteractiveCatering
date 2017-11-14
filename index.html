@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+
+  <head>
+    <!---se incluyen los archivos de estilos, de phaser, del mapainteractivo y el principal main --->
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>Interactive catering</title>
+    <!--<link rel="stylesheet" type="text/css" href="style.css">-->
+
+        <!-- Se hace el llamado de la libreria phaser -->
+    <script type="text/javascript" src="js/phaser.js"></script>
+    
+    <script src="js/game.js"></script>
+    <!--<script src="mainD.js"></script>-->
+
+  </head>
+
+  <body>
+    <!-- The Interactive Map -->
+    
+    <script type="text/javascript">
+        /*Fondos*/
+        var escenario = new Phaser.Game(800,600,Phaser.CANVAS,'navigator',{preload: preload, create: create, update: update});
+        
+        /*Objetos*/
+        var spoon ;
+        
+        /*Controles*/
+        var espacio;
+        var cursores;
+        
+        function preload(){
+            /*Cosas a cargar antes de iniciar el juego [imagenes]*/ 
+            escenario.load.image('fondo1','sprites/textura.jpg');
+            escenario.load.image('cuchara','sprites/cuchara.png');
+            /*Establecer un input por ejemplo de teclado*/
+            espacio = escenario.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+            /*Establecer todos los inputs de teclado*/
+            cursores = escenario.input.keyboard.createCursorKeys();
+        }
+        function create(){
+            /*Se inician los recursos sobre el juego[]*/            
+            escenario.add.sprite('0','0','fondo1');
+            /*Agregamos la imagen y la dejamos en una variable*/
+            spoon =  escenario.add.sprite('0','0','cuchara');
+            /*cambiamos el punto de adhesion de la imagen */
+            spoon.anchor.setTo(0.5,0.2);
+            /*Escalado de la imagen */
+            spoon.scale.setTo(0.5,0.5);
+            /*rotacion imagenes*/
+            spoon.angle = 90;
+            
+            
+
+            
+            /*Mantener dentro del canvas las imagenes*/
+            escenario.physics.startSystem(Phaser.Physics.ARCADE);
+            escenario.physics.arcade.enable(spoon);
+            spoon.body.collideWorldBounds = true; 
+        }
+        function update(){
+            /*Mantiene en constante actualizacion es un proceso vigilante que se encuentra en otro hilo[]*/
+            if(espacio.isDown){
+                /*Rotacion con estacio presionado*/
+                spoon.angle += 5;
+
+            }
+            if(cursores.right.isDown){
+                /*Cambio de posicion validando una tecla presionada*/
+                spoon.position.x += 10;
+            }
+            if(cursores.left.isDown){
+                /*Cambio de posicion validando una tecla presionada*/
+                spoon.position.x -= 10;
+            }
+            if(cursores.up.isDown){
+                /*Cambio de posicion validando una tecla presionada*/
+                spoon.position.y -= 10;
+            }
+            if(cursores.down.isDown){
+                /*Cambio de posicion validando una tecla presionada*/
+                spoon.position.y += 10;
+            }
+        }
+        
+        
+    </script>
+</body>
+
+</html>
