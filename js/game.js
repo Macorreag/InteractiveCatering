@@ -1,23 +1,46 @@
 
 var game = new Phaser.Game(1500,700, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
 
-function preload() {
+var platoA;
 
+function Elemento(nombre,ruta) {
+    this.nombre = nombre;
+    this.insercion = null ;
+    game.load.image(nombre, ruta);
+}
+
+Elemento.prototype.diHola = function() {
+  alert ('Hola, Soy ' + this.nombre);
+};
     
+Elemento.prototype.ponerse = function(x,y) {
+    this.insercion = game.add.sprite(x, y , this.nombre);
+    /*cambiamos el punto de adhesion de la imagen */
 
+    this.insercion.anchor.setTo(0.5,0.5);
+};
+
+function preload() {
+    
     game.load.image('logo', 'sprites/Logo.png');
-    game.load.image('sonic', 'sprites/InfoSpoon.png');
-    game.load.image('plato', 'sprites/PlatoA.png');
-    game.load.image('mesaInformal', 'sprites/mesaInformal.png');
-    game.load.image('mesaFormal', 'sprites/mesaFormal.png');
+    
+    /*Definicion objetos*/  
 
+    logo = new Elemento('logo', 'sprites/Logo.png');
+    mesaFormal = new Elemento('mesaFormal', 'sprites/mesaFormal.png');
+    mesaInformal = new Elemento('mesaInformal', 'sprites/mesaInformal.png');
+    platoA = new Elemento('platoA', 'sprites/PlatoA.png');
+    
+   
+    /*||||||||||||||||||||*/
 }
 
 var cursors;
 
 
 function create() {
-
+        
+    
     /*Limites del mundo */
     game.world.setBounds(-700, 0, 2900, 1200);
 
@@ -25,12 +48,8 @@ function create() {
     for (var i = 0; i < 200; i++)
     {
         game.add.sprite(game.world.randomX, game.world.randomY, 'logo');
-    }   
-    /*Se añanden las mesas*/
-    game.add.sprite(-450, 550 , 'mesaInformal');
-    game.add.sprite(950, 550 , 'mesaFormal');
-    game.add.sprite(950, 550 , 'plato');
-
+    } 
+    
     /*Titulo*/
     game.add.text(130, 20 , "CATERING & EVENTOS",
                     {
@@ -43,7 +62,7 @@ function create() {
     
 
     /*Texto fijo a la Camara */
-    var info = game.add.text(0, 0, "Conozca la organizacion de las mesas", 
+    var info = game.add.text(0, 0, "Conozca la organización de las mesas", 
                             {
                             font: "32px Arial",
                             fill: "#ffffff",
@@ -56,7 +75,16 @@ function create() {
     
     cursors = game.input.keyboard.createCursorKeys();
 
-}
+    
+    /*Se añanden las mesas*/
+    mesaInformal.ponerse(0, 800);
+    mesaFormal.ponerse(1500, 800);
+    platoA.ponerse(1500,900);
+
+    
+    
+
+}   
 
 function update() {
 
