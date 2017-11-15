@@ -8,6 +8,7 @@ function Elemento(nombre,ruta) {
     this.insercion = null ;
     this.textToolTip = "Hola";
     this.toolTip =null ;
+    this.alpha = false;
     game.load.image(nombre, ruta);
 }
 
@@ -30,6 +31,9 @@ Elemento.prototype.ponerse = function(x,y) {
                                 fontStroke: "#f45212",
                                 fontFill: "#f8ce18"
                               });
+    if(this.alpha){
+        this.insercion.alpha = 0.5 ;
+    }
     
 };
 
@@ -86,9 +90,12 @@ function create() {
     /*Se personalizan los objetos*/
     platoA.textToolTip = "Plato grande";
     copaVino.textToolTip = "Copa de Vino Tinto";
+    copaVino.alpha = true ;
     
-    copaVino.ponerse(1500, 700  );    
+    /*Se ponen los objetos como fueron persoalizados*/
+    copaVino.ponerse(1500, 700 );    
     platoA.ponerse(1500,900);
+    
     
 
     
