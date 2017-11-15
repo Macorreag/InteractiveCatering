@@ -6,8 +6,12 @@ var platoA;
 function Elemento(nombre,ruta) {
     this.nombre = nombre;
     this.insercion = null ;
+    this.textToolTip = "Hola";
+    this.toolTip =null ;
     game.load.image(nombre, ruta);
 }
+
+
 
 Elemento.prototype.diHola = function() {
   alert ('Hola, Soy ' + this.nombre);
@@ -18,6 +22,15 @@ Elemento.prototype.ponerse = function(x,y) {
     /*cambiamos el punto de adhesion de la imagen */
 
     this.insercion.anchor.setTo(0.5,0.5);
+    
+    this.toolTip = new Phasetips(game, {
+                                targetObject: this.insercion,
+                                context: this.textToolTip,
+                                strokeColor: 0xff0000,
+                                fontStroke: "#f45212",
+                                fontFill: "#f8ce18"
+                              });
+    
 };
 
 function preload() {
@@ -30,7 +43,7 @@ function preload() {
     mesaFormal = new Elemento('mesaFormal', 'sprites/mesaFormal.png');
     mesaInformal = new Elemento('mesaInformal', 'sprites/mesaInformal.png');
     platoA = new Elemento('platoA', 'sprites/PlatoA.png');
-    
+    copaVino = new Elemento('copaVino','sprites/copaVino.png');
    
     /*||||||||||||||||||||*/
 }
@@ -61,6 +74,25 @@ function create() {
 
     
 
+    
+    
+    cursors = game.input.keyboard.createCursorKeys();
+
+    
+    /*Se añanden las mesas*/
+    mesaInformal.ponerse(0, 800);
+    mesaFormal.ponerse(1500, 800);
+    
+    /*Se personalizan los objetos*/
+    platoA.textToolTip = "Plato grande";
+    copaVino.textToolTip = "Copa de Vino Tinto";
+    
+    copaVino.ponerse(1500, 700  );    
+    platoA.ponerse(1500,900);
+    
+
+    
+    
     /*Texto fijo a la Camara */
     var info = game.add.text(0, 0, "Conozca la organización de las mesas", 
                             {
@@ -72,18 +104,6 @@ function create() {
     info.fixedToCamera = true;
     info.cameraOffset.setTo(450, 600);
     /*|||||||||||||||||||||*/
-    
-    cursors = game.input.keyboard.createCursorKeys();
-
-    
-    /*Se añanden las mesas*/
-    mesaInformal.ponerse(0, 800);
-    mesaFormal.ponerse(1500, 800);
-    platoA.ponerse(1500,900);
-
-    
-    
-
 }   
 
 function update() {
