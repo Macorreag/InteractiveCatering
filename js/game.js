@@ -7,13 +7,14 @@ function preload() {
 
     game.load.image('logo', 'sprites/Logo.png');
     game.load.image('sonic', 'sprites/InfoSpoon.png');
-    game.load.image('phaser', 'sprites/PlatoA.png');
+    game.load.image('plato', 'sprites/PlatoA.png');
+    game.load.image('mesaInformal', 'sprites/mesaInformal.png');
+    game.load.image('mesaFormal', 'sprites/mesaFormal.png');
 
 }
 
 var cursors;
-var logo1;
-var logo2;
+
 
 function create() {
 
@@ -24,7 +25,12 @@ function create() {
     for (var i = 0; i < 200; i++)
     {
         game.add.sprite(game.world.randomX, game.world.randomY, 'logo');
-    }
+    }   
+    /*Se añanden las mesas*/
+    game.add.sprite(-450, 550 , 'mesaInformal');
+    game.add.sprite(950, 550 , 'mesaFormal');
+    game.add.sprite(950, 550 , 'plato');
+
     /*Titulo*/
     game.add.text(130, 20 , "CATERING & EVENTOS",
                     {
@@ -36,7 +42,7 @@ function create() {
 
     
 
-    /*Texto fijo a la imagen */
+    /*Texto fijo a la Camara */
     var info = game.add.text(0, 0, "Conozca la organizacion de las mesas", 
                             {
                             font: "32px Arial",
