@@ -1,3 +1,7 @@
+body{
+    background-image: url("https://www.satinestone.com/wp-content/uploads/2017/03/microcemento-satine-textura-3d3.jpg");
+    background-attachment: fixed;
+}
 canvas{
     margin: 4vh;
 }
