@@ -9,6 +9,7 @@ var platoA;
 var tween = null;
 var elementos = [];
 
+
 function Elemento(nombre,ruta) {
     this.x = 0;
     this.y = 0;
@@ -16,7 +17,8 @@ function Elemento(nombre,ruta) {
     this.insercion = null ;
     this.textToolTip = "Undefined";
     this.toolTip =null ;
-    this.alpha = false;
+    this.alpha = 1;
+    this.alphaVarInfo = 1;
     this.info = null ;
     this.varInfo = null ;
     game.load.image(nombre, ruta);
@@ -32,8 +34,8 @@ Elemento.prototype.onClick = function() {
   
     
     if(this.varInfo == null ){
-        this.varInfo =  game.add.sprite(this.x, this.y, this.info);
-        this.varInfo.anchor.setTo(0.5,0.5);
+        this.varInfo =  game.add.sprite(100, 100, this.info);
+        this.varInfo.fixedToCamera = true ;
         
         for(var i = 0 ; i < elementos.length  ; i++){
             if(this.nombre != elementos[i].nombre && elementos[i].varInfo != null){
@@ -50,7 +52,9 @@ Elemento.prototype.onClick = function() {
             }            
         }
     }
-    
+    if(this.alphaVarInfo != 1){
+        this.varInfo.alpha = this.alphaVarInfo;
+    }
     
     
 }
@@ -75,7 +79,7 @@ Elemento.prototype.ponerse = function(x,y) {
                                 fontStroke: "#f45212",
                                 fontFill: "#f8ce18"
                               });
-    if(this.alpha){
+    if(this.alpha != 1){
         this.insercion.alpha = 0.5 ;
     }  
     
@@ -91,13 +95,15 @@ Elemento.prototype.ponerse = function(x,y) {
 function preload() {
     
     game.load.image('logo', 'sprites/Logo.png');
-
+    var fondo = game.load.image('fondo', 'sprites/Fondo.jpg');
+    fondo.alpha = 0.5;
     
     /*Definicion objetos*/  
     elementos[0] = new Elemento('copaVino','sprites/copaVino.png');
-    logo = new Elemento('logo', 'sprites/Logo.png');
+    //logo = new Elemento('logo', 'sprites/Logo.png');
     elementos[1] = new Elemento('mesaFormal', 'sprites/mesaFormal.png');
     mesaInformal = new Elemento('mesaInformal', 'sprites/mesaInformal.png');
+    
     platoA = new Elemento('platoA', 'sprites/PlatoA.png');
     //copaVino = new Elemento('copaVino','sprites/copaVino.png');
     
@@ -107,6 +113,7 @@ function preload() {
     game.load.image('mesaInfo','sprites/mesaInfo.jpg');
     
     /*||||||||||||||||||||*/
+    
 }
 
 var cursors;
@@ -115,15 +122,9 @@ var cursors;
 function create() {
         
     
-    /*Limites del mundo */
-    game.world.setBounds(-700, 0, 2900, 1200);
-
-    /*Se pinta el fondo con el logo de la empresa*/
-    for (var i = 0; i < 200; i++)
-    {
-        game.add.sprite(game.world.randomX, game.world.randomY, 'logo');
-    } 
     
+    /*Limites del mundo */
+    var world = game.add.sprite(-700, 0, 'fondo');
     /*Titulo*/
     game.add.text(130, 20 , "CATERING & EVENTOS",
                     {
@@ -132,6 +133,20 @@ function create() {
                         align: "center" 
                     }
                 );
+    world.inputEnabled = true;
+    world.events.onInputDown.add(removeInfo, this);
+
+    
+    
+    game.world.setBounds(-700, 0, 2900, 1200);
+    
+    /*Se pinta el fondo con el logo de la empresa*/
+    for (var i = 0; i < 200; i++)
+    {
+        game.add.sprite(game.world.randomX, game.world.randomY, 'logo');
+    } 
+    
+    
 
     
 
@@ -149,7 +164,8 @@ function create() {
     /*Se personalizan los objetos*/
     platoA.textToolTip = "Plato grande";
     elementos[0].textToolTip = "Copa de Vino Tinto";
-    elementos[0].alpha = true ;
+    elementos[0].alpha = 05 ;
+    elementos[0].alphaVarInfo = 0.5;
     elementos[0].info ='infoVino' ;
     
     //copaVino.varInfo.visible  = false;
@@ -173,6 +189,7 @@ function create() {
     info.fixedToCamera = true;
     info.cameraOffset.setTo(450, 600);
     /*|||||||||||||||||||||*/
+
 }   
 
 function update() {
@@ -199,6 +216,20 @@ function update() {
     /*Control arrastre dispositivo movil*/
     
     /*||||||||||||||||||||||||*/
+    
 }
+
+
+function removeInfo(){
+
+    for(var i = 0 ; i < elementos.length  ; i++){
+                            
+
+            if(elementos[i].varInfo != null){
+               elementos[i].varInfo.visible = false; 
+            }
+        }
+}
+
 
 
