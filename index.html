@@ -2,6 +2,16 @@
 <html>
 
   <head>
+   
+    <!-- Se hace el llamado de la libreria phaser -->
+    <script type="text/javascript" src="js/phaser.js"></script>
+    <script src="js/game.js"></script>
+
+    <!--<script src='core.js'></script>-->
+    <!-- Para manejo del tooltip se usa esta libreria -->
+    <script src="js/Phasetips.js"></script>  
+    <!-- para el manejo del drag en el mapa -->
+    <script src="js/phaser-kinetic-scrolling-plugin.js"></script> 
     
     <link rel=StyleSheet href="css/style.css" type="text/css" media=screen><link> 
     <link rel="icon" href="./favicon.png" type="image/png">
@@ -15,13 +25,8 @@
     <title>Interactive catering</title>
     <!--<link rel="stylesheet" type="text/css" href="style.css">-->
 
-    <!-- Se hace el llamado de la libreria phaser -->
-    <script type="text/javascript" src="js/phaser.js"></script>
-    <script src="js/game.js"></script>
-
-    <!--<script src='core.js'></script>-->
-    <!-- Para manejo del tooltip se usa esta libreria -->
-    <script src="js/Phasetips.js"></script>  
+    <div id="MapInteractive" class="Game"></div>
+    
    
     <!-- The Interactive Map -->
     

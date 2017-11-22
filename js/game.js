@@ -1,8 +1,9 @@
 
-var game = new Phaser.Game(1500,700, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(1500,700, Phaser.CANVAS, 'MapInteractive', { preload: preload, create: create, update: update });
 
 var title;
 var elementos = [];
+var cursors;
 
 function Elemento(nombre,ruta) {
     this.x = 0;
@@ -19,11 +20,8 @@ function Elemento(nombre,ruta) {
     this.varInfo = null ;
     game.load.image(nombre, ruta);
 }
-
 Elemento.prototype.onClick = function() {  
-  
-    
-    if(this.varInfo == null ){
+  if(this.varInfo == null ){
         this.varInfo =  game.add.sprite(100, 100, this.info);
         this.varTextInfo = game.add.sprite(500,100,this.textInfo);
         this.varInfo.animations.add('rotate',[0,1,2,3,4,5,6,7],5,true);
@@ -52,12 +50,8 @@ Elemento.prototype.onClick = function() {
     }
     if(this.alphaVarInfo != 1){
         this.varInfo.alpha = this.alphaVarInfo;
-    }
-    
-    
-}
-
-    
+    }    
+}    
 Elemento.prototype.ponerse = function(x,y) {
  
     //this.insercion = game.add.sprite(x, y , this.nombre);
@@ -82,7 +76,29 @@ Elemento.prototype.ponerse = function(x,y) {
     }      
 };
 
+
+/*El juego solo manejara 1 estado por esto 
+ no se crea una variable para manejar estados
+*/
 function preload() {
+    /*Se le aplica responsive desing con Phaser*/
+     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    //game.scale.setMinMax(400, 300, 800, 600);
+    /*cargando el plugin de scroll*/
+    game.kineticScrolling = this.game.plugins.add(Phaser.Plugin.KineticScrolling);
+    
+    
+   game.kineticScrolling.configure({
+        kineticMovement: true,
+        timeConstantScroll: 325, //really mimic iOS
+        horizontalScroll: true,
+        verticalScroll: true,
+        horizontalWheel: true,
+        verticalWheel: false,
+        deltaWheel: 40
+   });
+    
+    game.kineticScrolling.start();
     /*Imagenes sin acciones*/
         /*Imagenes generales*/
     game.load.image('logo', 'sprites/Logo.png');
@@ -91,6 +107,26 @@ function preload() {
     game.load.spritesheet('infoVino', 'sprites/copaVInfo.png',352,594);
     game.load.spritesheet('mesaInfo','sprites/mesaInfoA.png',637,394);
     game.load.spritesheet('infoPlatoBase','sprites/infoPlatoBase.png',614,363);
+    game.load.spritesheet('infoPlato','sprites/plateInfo.png',595,459);
+    game.load.spritesheet('infoSpoonPrincipal','sprites/spoonPrincipalInfo.png',666,582);
+    game.load.spritesheet('infoKnifePrincipal','sprites/knifePrincipalInfo.png',378,555);
+    game.load.spritesheet('infoForkPrincipal','sprites/forkPrincipalInfo.png',409,718);
+    game.load.spritesheet('infoButter','sprites/butterInfo.png',305,543);
+    game.load.spritesheet('infoWaterCup','sprites/waterCupInfo.png',346,492);
+    game.load.spritesheet('infoWineWCup','sprites/copaVBInfo.png',377,416);
+    game.load.spritesheet('infoMiniSpoonFork','sprites/miniSpoonForkInfo.png',377,537);
+    game.load.spritesheet('infoMiniFork','sprites/miniForkInfo.png',297,595);
+    game.load.spritesheet('infoMiniSpoon','sprites/miniSpoonInfo.png',491,441);
+    game.load.spritesheet('infoPlateSoup','sprites/plateSoupInfo.png',384,462);
+    game.load.spritesheet('infoTableI','sprites/tableInformalInfo.png',566,477);
+    
+    
+    
+    
+    
+    
+    
+    
     game.load.image('servilletaInfo', 'sprites/servilletaInfo.jpg');
         /*Texto de informacion*/
     game.load.image('textoMesaFormal', 'sprites/textoMesaFormal.png');
@@ -150,11 +186,8 @@ function preload() {
     
     elementos[24] = new Elemento('copaVino','sprites/copaVino.png');
 }
-var cursors;
-function create() {
-        
-    
-    
+
+function create() {    
     /*Limites del mundo */
     var world = game.add.sprite(-700, 0, 'fondo');
     world.inputEnabled = true;
@@ -186,6 +219,7 @@ function create() {
 
     /*Se añanden las mesas*/
     elementos[0].textToolTip = "Mesa Informal";
+    elementos[0].info = 'infoTableI';
     elementos[0].ponerse(0, 800);
     
     elementos[1].textToolTip = "Mesa Formal";
@@ -203,6 +237,7 @@ function create() {
     elementos[2].ponerse(1685,740);
     
     elementos[11].textToolTip = " Cuchillo \n Principal";
+    elementos[11].info ='infoKnifePrincipal';
     elementos[11].ponerse(1650,900); 
         
     
@@ -211,50 +246,60 @@ function create() {
     elementos[3].ponerse(1500,900);
     
     elementos[4].textToolTip = " Plato \n grande";
+    elementos[4].info='infoPlato';
     elementos[4].ponerse(1500,900);
     
     elementos[5].textToolTip = "Plato para ensalada o sopa";
+    elementos[5].info ='infoPlateSoup';
     elementos[5].ponerse(1500,900);
     
     elementos[6].textToolTip = "Copa Agua";
     elementos[6].textInfo = "textoCopaAgua";
     elementos[6].alpha = 0.5 ;
     elementos[6].alphaVarInfo = 0.5;
-    elementos[6].info ='infoAgua' ;
+    elementos[6].info ='infoWaterCup' ;
     elementos[6].ponerse(1615,690);
     
     elementos[7].textToolTip = "Copa de Vino Blanco";
     elementos[7].textInfo = "textoCopaVinoB";
     elementos[7].alpha = 0.9 ;
     elementos[7].alphaVarInfo = 0.5;
-    elementos[7].info ='infoVinoB' ;
+    elementos[7].info ='infoWineWCup' ;
     elementos[7].ponerse(1725,790);
     
     elementos[8].textToolTip = "Cubiertos para Postre";
+    elementos[8].info = 'infoMiniSpoonFork';
     elementos[8].ponerse(1500,730);
     elementos[8].insercion.scale.setTo(0.7);
     
     elementos[9].textToolTip = "Cuchara para Sopa";
+    elementos[9].info='infoSpoonPrincipal';
     elementos[9].ponerse(1750,900); 
     
     elementos[10].textToolTip = "Tenedor para Plato Principal";
+    elementos[10].info = 'infoForkPrincipal';
     elementos[10].ponerse(1350,900); 
     
         
     elementos[12].textToolTip = "Cucharita para Café";
+    elementos[12].info ='infoMiniSpoon';
     elementos[12].ponerse(1700,930); 
     
     elementos[13].textToolTip = "Tenedor para Pescado";
+    elementos[13].info ='infoForkPrincipal';
     elementos[13].ponerse(1300,910); 
     
     elementos[14].textToolTip = "Tenedor para Ensalada";
+    elementos[14].info = 'infoMiniFork';
     elementos[14].ponerse(1250,920); 
     
     elementos[15].textToolTip = "Plato para Pan";
+    elementos[15].info ='infoPlato';
     elementos[15].ponerse(1300,750); 
     elementos[15].insercion.scale.setTo(0.7);
     
     elementos[16].textToolTip = "Pala de Mantequilla";
+    elementos[16].info='infoButter';
     elementos[16].ponerse(1300,750); 
     elementos[16].insercion.angle = -45;
     
@@ -265,26 +310,35 @@ function create() {
     /*Se personalizan los objetos MESA INFORMAL*/
     
     elementos[18].textToolTip = "Plato De servicio";
+    elementos[18].info = 'infoPlato';
     elementos[18].ponerse(0, 900);
     
     elementos[19].textToolTip = "Servilleta";
+    elementos[19].info =  "servilletaInfo";
     elementos[19].ponerse(0, 900);
     elementos[19].insercion.scale.setTo(0.6);
     elementos[19].insercion.angle = -10;
     
     elementos[20].textToolTip = "Tenedor Principal";
+    elementos[20].info = 'infoForkPrincipal';
     elementos[20].ponerse(-100, 900);
     
     elementos[21].textToolTip = " Cuchillo\n Principal";
+    elementos[21].info = 'infoKnifePrincipal';
     elementos[21].ponerse(100, 900);
     
     elementos[22].textToolTip = "Cuchara Principal";
+    elementos[22].info = 'infoSpoonPrincipal';
     elementos[22].ponerse(150, 900);
     
     elementos[23].textToolTip = "Copa Agua";
+    elementos[23].info ='infoWaterCup';
+    elementos[23].alphaVarInfo = 0.7;
     elementos[23].ponerse(10, 750);
     
     elementos[24].textToolTip = "Copa Vino";
+    elementos[24].info = 'infoVino';
+    elementos[24].alphaVarInfo = 0.7;
     elementos[24].ponerse(100, 780);
     
     
@@ -308,11 +362,8 @@ function create() {
     info.fixedToCamera = true;
     info.cameraOffset.setTo(450, 600);
     /*|||||||||||||||||||||*/
-
 }   
-
 function update() {
-
     /*Controles*/
     /*Control Camara*/
         if (cursors.up.isDown)
@@ -333,15 +384,8 @@ function update() {
             game.camera.x += 20;
         }
     /*Control arrastre dispositivo movil with stick*/
-    
-    /*||||||||||||||||||||||||*/
-
-    
 }
-
-
 function removeInfo(){
-
     for(var i = 0 ; i < elementos.length  ; i++){
             if(elementos[i].varInfo != null){
                 elementos[i].varInfo.visible = false;
@@ -349,7 +393,6 @@ function removeInfo(){
             }
         }
 }
-
 function openPage() {
     window.open('https://macorreag.github.io/Azur/','_blank');
 };
