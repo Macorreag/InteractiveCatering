@@ -4,6 +4,7 @@ var game = new Phaser.Game(1500,700, Phaser.CANVAS, 'MapInteractive', { preload:
 var title;
 var elementos = [];
 var cursors;
+var dragAnimate;
 
 function Elemento(nombre,ruta) {
     this.x = 0;
@@ -118,10 +119,9 @@ function preload() {
     game.load.spritesheet('infoMiniFork','sprites/miniForkInfo.png',297,595);
     game.load.spritesheet('infoMiniSpoon','sprites/miniSpoonInfo.png',491,441);
     game.load.spritesheet('infoPlateSoup','sprites/plateSoupInfo.png',384,462);
-    game.load.spritesheet('infoTableI','sprites/tableInformalInfo.png',566,477);
-    
-    
-    
+    game.load.spritesheet('infoTableI','sprites/tableInformalInfo.png',566,477); 
+    game.load.spritesheet('textCuchilloPrincipal','sprites/textCuchilloPrincipal.png',566,477); 
+    game.load.spritesheet('textoMesaInformal','sprites/textoMesaInformal.png',566,477); 
     
     
     
@@ -133,6 +133,26 @@ function preload() {
     game.load.image('textoCopaVinoT', 'sprites/textoCopaVinoT.png');
     game.load.image('textoCopaAgua', 'sprites/textoCopaAgua.png');
     game.load.image('textoCopaVinoB', 'sprites/textoCopaVinoB.png');
+    game.load.image('textoCubiertosP', 'sprites/textoCubiertosPostre.png');
+    game.load.image('textoPlatoPan', 'sprites/textoPlatoPan.png');
+    game.load.image('textoPalaMantequilla', 'sprites/textoPalaMantequilla.png');
+    game.load.image('textoTenedorPrincipal', 'sprites/textoTenedorPrincipal.png');
+    game.load.image('textoTenedorPescado', 'sprites/textoTenedorPescado.png');
+    game.load.image('textoTenedorEnsalada', 'sprites/textoTenedorEnsalada.png');
+    game.load.image('textoServilleta', 'sprites/textoServilleta.png');
+    game.load.image('textoPlatoBase', 'sprites/textoPlatoBase.png');
+    game.load.image('textoPlatoPrincipal', 'sprites/textoPlatoPrincipal.png');
+    game.load.image('textoPlatoSopa', 'sprites/textoPlatoSopa.png');
+    game.load.image('textCucharaCafe', 'sprites/textCucharaCafe.png');
+    game.load.image('textoMesaInformal','sprites/textoMesaInformal.png'); 
+    game.load.image('textoCucharaPrincipal','sprites/textoCucharaPrincipal.png'); 
+    
+    
+    
+
+    
+    
+    game.load.image('drag','sprites/dragMove.png');
     
     /*Definicion objetos MESA FORMAL*/ 
     
@@ -210,15 +230,22 @@ function create() {
     game.world.setBounds(-700, 0, 2900, 1200);    
     
     cursors = game.input.keyboard.createCursorKeys();
+    
+    
 
     /*Se pinta el fondo con el logo de la empresa*/
     for (var i = 0; i < 200; i++)
     {
         game.add.sprite(game.world.randomX, game.world.randomY, 'logo');
     } 
+    
+    dragAnimate = game.add.image(200,300,'drag');
+    
 
+    
     /*Se añanden las mesas*/
     elementos[0].textToolTip = "Mesa Informal";
+    elementos[0].textInfo = 'textoMesaInformal';
     elementos[0].info = 'infoTableI';
     elementos[0].ponerse(0, 800);
     
@@ -237,19 +264,23 @@ function create() {
     elementos[2].ponerse(1685,740);
     
     elementos[11].textToolTip = " Cuchillo \n Principal";
+    elementos[11].textInfo = 'textCuchilloPrincipal';
     elementos[11].info ='infoKnifePrincipal';
     elementos[11].ponerse(1650,900); 
         
     
     elementos[3].textToolTip = " Plato \n Base";
+    elementos[3].textInfo = 'textoPlatoBase';
     elementos[3].info ='infoPlatoBase';
     elementos[3].ponerse(1500,900);
     
     elementos[4].textToolTip = " Plato \n grande";
+    elementos[4].textInfo = 'textoPlatoPrincipal';
     elementos[4].info='infoPlato';
     elementos[4].ponerse(1500,900);
     
     elementos[5].textToolTip = "Plato para ensalada o sopa";
+    elementos[5].textInfo = 'textoPlatoSopa';
     elementos[5].info ='infoPlateSoup';
     elementos[5].ponerse(1500,900);
     
@@ -268,75 +299,91 @@ function create() {
     elementos[7].ponerse(1725,790);
     
     elementos[8].textToolTip = "Cubiertos para Postre";
+    elementos[8].textInfo = 'textoCubiertosP';
     elementos[8].info = 'infoMiniSpoonFork';
     elementos[8].ponerse(1500,730);
     elementos[8].insercion.scale.setTo(0.7);
     
     elementos[9].textToolTip = "Cuchara para Sopa";
+    elementos[9].textInfo = 'textoCucharaPrincipal';
     elementos[9].info='infoSpoonPrincipal';
     elementos[9].ponerse(1750,900); 
     
     elementos[10].textToolTip = "Tenedor para Plato Principal";
+    elementos[10].textInfo = 'textoTenedorPrincipal';
     elementos[10].info = 'infoForkPrincipal';
     elementos[10].ponerse(1350,900); 
     
         
     elementos[12].textToolTip = "Cucharita para Café";
+    elementos[12].textInfo = 'textCucharaCafe';
     elementos[12].info ='infoMiniSpoon';
     elementos[12].ponerse(1700,930); 
     
     elementos[13].textToolTip = "Tenedor para Pescado";
+    elementos[13].textInfo = 'textoTenedorPescado';
     elementos[13].info ='infoForkPrincipal';
     elementos[13].ponerse(1300,910); 
     
     elementos[14].textToolTip = "Tenedor para Ensalada";
+    elementos[14].textInfo = 'textoTenedorEnsalada';
     elementos[14].info = 'infoMiniFork';
     elementos[14].ponerse(1250,920); 
     
     elementos[15].textToolTip = "Plato para Pan";
+    elementos[15].textInfo = 'textoPlatoPan';
     elementos[15].info ='infoPlato';
     elementos[15].ponerse(1300,750); 
     elementos[15].insercion.scale.setTo(0.7);
     
     elementos[16].textToolTip = "Pala de Mantequilla";
     elementos[16].info='infoButter';
+    elementos[16].textInfo = 'textoPalaMantequilla';
     elementos[16].ponerse(1300,750); 
     elementos[16].insercion.angle = -45;
     
     elementos[17].textToolTip = "servilleta";
+    elementos[17].textInfo = 'textoServilleta';
     elementos[17].info = "servilletaInfo";
     elementos[17].ponerse(1150,920); 
     
     /*Se personalizan los objetos MESA INFORMAL*/
     
     elementos[18].textToolTip = "Plato De servicio";
+    elementos[18].textInfo = 'textoTenedorPrincipal';
     elementos[18].info = 'infoPlato';
     elementos[18].ponerse(0, 900);
     
     elementos[19].textToolTip = "Servilleta";
+    elementos[19].textInfo = 'textoServilleta';
     elementos[19].info =  "servilletaInfo";
     elementos[19].ponerse(0, 900);
     elementos[19].insercion.scale.setTo(0.6);
     elementos[19].insercion.angle = -10;
     
     elementos[20].textToolTip = "Tenedor Principal";
+    elementos[20].textInfo = 'textoTenedorPrincipal';
     elementos[20].info = 'infoForkPrincipal';
     elementos[20].ponerse(-100, 900);
     
     elementos[21].textToolTip = " Cuchillo\n Principal";
+    elementos[21].textInfo = 'textCuchilloPrincipal';
     elementos[21].info = 'infoKnifePrincipal';
     elementos[21].ponerse(100, 900);
     
     elementos[22].textToolTip = "Cuchara Principal";
+    elementos[22].textInfo = 'textoCucharaPrincipal';
     elementos[22].info = 'infoSpoonPrincipal';
     elementos[22].ponerse(150, 900);
     
     elementos[23].textToolTip = "Copa Agua";
+    elementos[23].textInfo = "textoCopaAgua";
     elementos[23].info ='infoWaterCup';
     elementos[23].alphaVarInfo = 0.7;
     elementos[23].ponerse(10, 750);
     
     elementos[24].textToolTip = "Copa Vino";
+    elementos[24].textInfo = "textoCopaVinoT";
     elementos[24].info = 'infoVino';
     elementos[24].alphaVarInfo = 0.7;
     elementos[24].ponerse(100, 780);
@@ -384,6 +431,12 @@ function update() {
             game.camera.x += 20;
         }
     /*Control arrastre dispositivo movil with stick*/
+    if(dragAnimate.x == 0){
+        dragAnimate.x =200;
+        dragAnimate.y =300;         
+    }
+        dragAnimate.x -=1;
+        dragAnimate.y -=1;    
 }
 function removeInfo(){
     for(var i = 0 ; i < elementos.length  ; i++){
